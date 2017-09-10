@@ -11,17 +11,26 @@
       <form action="/scrape" method="GET">
         <input type="submit" value="Scrape">
       </form>
-      <form action="/articles" method="GET">
+<!--       <form action="/articles" method="GET">
         <input type="submit" value="Display">
-      </form>
+      </form> -->
+      <button id="showit">showit</button>
       <div id="articles"></div>
-      <div id="notes></div>
+      <div id="notes"></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
-      $(document).on("click", "#scrape", () =>{
-        $.
-      })
+    $(document).on('click', '#showit', function(){
+      $('#articles').empty();
+      $.getJSON("/articles", function(data) {
+        // For each one
+        for (var i = 0; i < data.length; i++) {
+          // Display the apropos information on the page
+          $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+        }
+      });
+    })
+
     </script>
     <!-- <script src="app.js"></script> -->
   </body>
