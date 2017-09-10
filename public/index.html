@@ -6,32 +6,36 @@
   </head>
   <body>
     <div id="wrapper">
-      <h1>Science Scraper</h1>
-      <h2><i>All the NYT Science articles you could ever want, and more!</i></h2>
+
+      <div class="navbar">
+        <h1>Science Scraper</h1>
+        <h2><i>All the NYT Science articles you could ever want, and more!</i></h2>
+        <button>Saved Articles</button>
+      </div>
+
       <form action="/scrape" method="GET">
         <input type="submit" value="Scrape">
       </form>
+
 <!--       <form action="/articles" method="GET">
         <input type="submit" value="Display">
       </form> -->
-      <button id="showit">showit</button>
-      <div id="articles"></div>
-      <div id="notes"></div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script>
-    $(document).on('click', '#showit', function(){
-      $('#articles').empty();
-      $.getJSON("/articles", function(data) {
-        // For each one
-        for (var i = 0; i < data.length; i++) {
-          // Display the apropos information on the page
-          $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
-        }
-      });
-    })
+      <!-- <button id="showit">showit</button> -->
 
+      <div id="articles"></div>
+
+      <div id="notes"></div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+      $(document).ready(function(){
+        $('#articles').empty();
+      })
     </script>
-    <!-- <script src="app.js"></script> -->
+
+    <script src="app.js"></script>
   </body>
 </html>

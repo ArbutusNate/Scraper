@@ -1,25 +1,34 @@
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
   // For each one
+  $('#articles').empty();
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+    let articleBox =  $("<div id='" + data[i]._id + "' data-id='" + data[i]._id + "'> </div>");
+    let articleTitle = $("<a href='" + data[i].link + "'><h2 class='title'>" + data[i].title + "</h2>");
+    // let notebutton = $()
+    $("#articles").append(articleBox);
+    $("#" + data[i]._id + "").append(articleTitle);
   }
 });
 
 
 // Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
+$(document).on("click", "h2", function() {
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag
-  var thisId = $(this).attr("data-id");
+  let thisId = $(this).attr("data-id");
 
   // Now make an ajax call for the Article
   $.ajax({
     method: "GET",
     url: "/articles/" + thisId
   })
+
+
+
+
     // With that done, add the note information to the page
     .done(function(data) {
       console.log(data);
