@@ -4,7 +4,7 @@ $.getJSON("/articles", function(data) {
   $('#articles').empty();
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    let articleBox =  $("<div id='" + data[i]._id + "' data-id='" + data[i]._id + "'> </div>");
+    let articleBox =  $("<div id='" + data[i]._id + "' data-id='" + data[i]._id + "'> <button class='save-article'>Save</button></div>");
     let articleTitle = $("<a href='" + data[i].link + "'><h2 class='title'>" + data[i].title + "</h2>");
     // let notebutton = $()
     $("#articles").append(articleBox);

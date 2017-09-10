@@ -67,7 +67,8 @@ app.get("/scrape", function(req, res) {
 
     });
   });
-  res.send("Scraped");
+  // res.send("Scraped");
+  res.redirect("/");
 });
 
 // This will get the articles we scraped from the mongoDB
@@ -75,25 +76,21 @@ app.get("/articles", function(req, res) {
   console.log("trying to get scraped info");
   Article.find({}, (err, doc) => {
     if(!err) {
-      // console.log(doc)
-      // res.json(doc);
-      let articleBox = $("<div class='articlebox'>")
-      let displayResults = doc.map((display) => {
-        console.log(display.title);
-        articleBox
-          .appendTo($("#articles"))
-          .attr("AID", display._ID)
-      })
+      res.json(doc);
+    } else {
+      throw err;
     }
   })
-
-  // TODO: Finish the route so it grabs all of the articles
-
 });
 
 // This will grab an article by it's ObjectId
 app.get("/articles/:id", function(req, res) {
-
+  console.log("trying to make it go");
+  Article.find({_id : req.paramds.id}, (err, doc) => {
+    if(!err){
+      console.log(doc.Notes);
+    }
+  })
 
   // TODO
   // ====
