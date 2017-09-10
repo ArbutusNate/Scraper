@@ -6,13 +6,23 @@
   </head>
   <body>
     <div id="wrapper">
-      <h1>Note Scraper</h1>
-      <h2><i>If you can do this...the homework should be no problem.</i></h2>
-      <form type="submit"></form>
+      <h1>Science Scraper</h1>
+      <h2><i>All the NYT Science articles you could ever want, and more!</i></h2>
+      <form action="/scrape" method="GET">
+        <input type="submit" value="Scrape">
+      </form>
+      <form action="/articles" method="GET">
+        <input type="submit" value="Display">
+      </form>
       <div id="articles"></div>
-      <div id="notes"></div>
+      <div id="notes></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="app.js"></script>
+    <script>
+      $(document).on("click", "#scrape", () =>{
+        $.
+      })
+    </script>
+    <!-- <script src="app.js"></script> -->
   </body>
 </html>

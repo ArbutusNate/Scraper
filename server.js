@@ -1,23 +1,23 @@
 // Dependencies
-var express = require("express");
-var bodyParser = require("body-parser");
+const express = require("express");
+const bodyParser = require("body-parser");
 // var logger = require("morgan");
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-var request = require("request");
-var cheerio = require("cheerio");
+const request = require("request");
+const cheerio = require("cheerio");
 
-var Models = require("./models/Note.js");
-var Article = require("./models/Article.js");
+const Models = require("./models/Comment.js");
+const Article = require("./models/Article.js");
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
 
 // Initialize Express
-var app = express();
+const app = express();
 
 // Use morgan and body parser with our app
-app.use(logger("dev"));
+// app.use(logger("dev"));
 app.use(bodyParser.urlencoded({
   extended: false
 }));
@@ -27,7 +27,7 @@ app.use(express.static("public"));
 
 // Database configuration with mongoose
 mongoose.connect("mongodb://localhost/articles");
-var db = mongoose.connection;
+const db = mongoose.connection;
 
 // Show any mongoose errors
 db.on("error", function(error) {
@@ -43,27 +43,19 @@ db.once("open", function() {
 // Routes
 // ======
 
-// A GET request to scrape the echojs website
 app.get("/scrape", function(req, res) {
+  console.log("trying to scrape");
   // First, we grab the body of the html with request
-  request("https://www.nytimes.com/", function(error, response, html) {
+  request("https://www.nytimes.com/science", function(error, response, html) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(html);
     // Now, we grab every h2 within an article tag, and do the following:
-    $("article h2").each(function(i, element) {
-
-      // Save an empty result object
+    $("article h2.headline").each(function(i, element) {
       var result = {};
-
-      // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this).children("a").text();
       result.link = $(this).children("a").attr("href");
-
-      // Using our Article model, create a new entry
-      // This effectively passes the result object to the entry (and the title and link)
       var entry = new Article(result);
-
-      // Now, save that entry to the db
+      // SAVE
       entry.save(function(err, doc) {
         if (err) {
           console.log(err);
@@ -80,10 +72,22 @@ app.get("/scrape", function(req, res) {
 
 // This will get the articles we scraped from the mongoDB
 app.get("/articles", function(req, res) {
-
+  console.log("trying to get scraped info");
+  Article.find({}, (err, doc) => {
+    if(!err) {
+      // console.log(doc)
+      // res.json(doc);
+      let articleBox = $("<div class='articlebox'>")
+      let displayResults = doc.map((display) => {
+        console.log(display.title);
+        articleBox
+          .appendTo($("#articles"))
+          .attr("AID", display._ID)
+      })
+    }
+  })
 
   // TODO: Finish the route so it grabs all of the articles
-
 
 });
 
