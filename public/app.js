@@ -1,9 +1,19 @@
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
-  sendArticles(data);
-  }
-);
+  displayArticles(data);
+  });
 
+// $.getJSON("/saved", (data) => {
+//   sendArticles(data);
+// })
+
+//brand button
+$(document).on("click", "#brand", function() {
+  $.ajax({
+    method: "GET",
+    url: "/"
+  })
+})
 
 //Save Button
 $(document).on("click", ".save-article", function() {
@@ -12,20 +22,29 @@ $(document).on("click", ".save-article", function() {
   let thisId = $(this).attr("data-id");
   // .attr("data-id");
   $.ajax({
-    method: "GET",
+    method: "POST",
     url: "/articles/" + thisId
   });
 })
 
 $(document).on("click", ".saved-articles", function() {
-  $("articles").empty()
+  $("#articles").empty();
+  $.ajax({
+    method: "GET",
+    url: "/saved"
+  }).then($.getJSON("/saved", (data) => {
+    displayArticles(data);
+  })
+  )
 })
 
-let sendArticles = (data) => {
+$(document).on("click", "", () => {})
+
+let displayArticles = (data) => {
   $('#articles').empty();
   let singleArticle = data.map(function(data) {
     // Display the apropos information on the page
-    let articleBox =  $("<div class='article-box' id='" + data._id + "' data-id='" + data._id + "'> <button data-id='" + data._id + "' class='save-article'>Save</button></div>");
+    let articleBox =  $("<div class='article-box' id='" + data._id + "' data-id='" + data._id + "'> <button data-id='" + data._id + "' class='save-article'>Save</button><button id='add-note'>Note</button></div>");
     let articleTitle = $("<a href='" + data.link + "'><h2 class='title'>" + data.title + "</h2><button class='save'");
     // let notebutton = $()
     $("#articles").append(articleBox);

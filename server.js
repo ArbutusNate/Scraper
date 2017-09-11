@@ -39,7 +39,13 @@ db.once("open", function() {
   console.log("Mongoose connection successful.");
 });
 
-
+let displayThis = (res, err, doc) => {
+  if(!err) {
+    res.json(doc);
+  } else {
+    throw err;
+  }
+}
 // Routes
 // ======
 
@@ -73,35 +79,27 @@ app.get("/scrape", function(req, res) {
 
 // This will get the articles we scraped from the mongoDB
 app.get("/articles", function(req, res) {
-  console.log("trying to get scraped info");
+  console.log("Displaying scraped articles");
   Article.find({}, (err, doc) => {
-    if(!err) {
-      res.json(doc);
-    } else {
-      throw err;
-    }
+    displayThis(res, err, doc);
   })
 });
 
-// Set Saved to True
-app.get("/articles/:id", function(req, res) {
-  console.log("trying to make it go");
-  Article.update({ _id: req.params.id }, { $set: { saved: 'true' }}, (err, doc) => {
-    if(!err){
-      console.log(doc);
-    }
+//Shows saved articles.
+app.get("/saved",function(req, res) {
+  console.log("Getting saved articles.")
+  Article.find({saved : 'true'}, (err, doc) => {
+    console.log(doc);
+    displayThis(res, err, doc);
   })
+})
 
-  // TODO
-  // ====
-
-  // Finish the route so it finds one article using the req.params.id,
-
-  // and run the populate method with "note",
-
-  // then responds with the article with the note included
-
-
+// Set Saved to True
+app.post("/articles/:id", function(req, res) {
+  console.log("Saving this article.");
+  Article.update({ _id: req.params.id }, { $set: { saved: 'true' }}, (err, doc) => {
+    displayThis(res, err, doc);
+  })
 });
 
 // Create a new note or replace an existing note
