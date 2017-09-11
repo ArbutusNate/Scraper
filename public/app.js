@@ -42,12 +42,12 @@ $(document).on("click", ".save-article", function() {
 
 //Open Note Modal
 $(document).on("click", "#add-note", function() {
+  console.log("opening note modal and searching for notes")
   let thisId = $(this).parent().attr("data-id");
   $("#notes-modal").show().attr("data-id", thisId);
-  $.ajax({
-    method: "GET",
-    url: "/articles/notes/" + thisId
-  })
+  $.getJSON("/articles/notes/" + thisId, function(data) {
+    console.log(data);
+  });
 })
 
 let displayArticles = (data) => {

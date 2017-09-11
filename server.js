@@ -40,11 +40,8 @@ db.once("open", function() {
 });
 
 let displayThis = (res, err, doc) => {
-  if(!err) {
-    res.json(doc);
-  } else {
-    throw err;
-  }
+  if (err) return handleError(err);
+  res.json(doc);
 }
 // Routes
 // ======
@@ -97,14 +94,21 @@ app.get("/saved",function(req, res) {
 // Set Saved to True
 app.post("/articles/:id", function(req, res) {
   console.log("Saving this article.");
-  Article.update({ _id: req.params.id }, { $set: { saved: 'true' }}, (err, doc) => {
+  Article.update({ _id : req.params.id }, { $set: { saved: 'true' }}, (err, doc) => {
     displayThis(res, err, doc);
   })
 });
 
-// Get notes for this article 
+// Get notes for this article
 app.get("/articles/notes/:id", function(req, res) {
-
+  console.log("running notes search and populate.")
+  Article.find({ _id : req.params.id })
+    .populate('Comment')
+    .exec(function(err, article) {
+      if (err) return handleError(err);
+      console.log(article);
+    })
+})
 
   // TODO
   // ====
@@ -116,13 +120,13 @@ app.get("/articles/notes/:id", function(req, res) {
   // and update it's "note" property with the _id of the new note
 
 
-});
+// });
 
 // Post Note
 app.post("/articles/notes/:id", function(req, res) {
 
 
-  
+
 })
 
 
