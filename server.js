@@ -107,20 +107,27 @@ app.get("/articles/notes/:id", function(req, res) {
   console.log("running notes search and populate.")
   Article.findOne({ _id : req.params.id })
     .populate('Note')
-    .exec(function(err, article) {
+    .exec(function(err, data) {
+      // displayThis(res, err, data);
       if (!err) {
-        console.log(article);
+        console.log(data);
       } else {
-        throw err;
+        throw err
       }
     })
 });
 
 // Post Note
 app.post("/articles/notes/:id", function(req, res) {
-  console.log("postin a note: " + req.body)
-
-
+  console.log("postin a note: ");
+  let newNote = new Note(req.body);
+  Article.update({ _id : req.params.id }, { $set: {note : newNote} }, (err, doc) => {
+    if(!err){
+      console.log(doc);
+    } else {
+      throw err
+    }
+  })
 });
 
 

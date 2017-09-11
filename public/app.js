@@ -46,7 +46,10 @@ $(document).on("click", "#add-note", function() {
   let thisId = $(this).parent().attr("data-id");
   $("#notes-modal").show().attr("data-id", thisId);
   $.getJSON("/articles/notes/" + thisId, (data) => {
-    console.log(data);
+    console.log("Note Info:")
+    console.log(data.note);
+    let singleNote = $("<div><span>" + data.note + "</span><button>X</button</div>")
+    $("#notes-list").append(singleNote)
   });
 })
 
@@ -60,11 +63,13 @@ $(document).on("click", "#close", (event) => {
 $(document).on("click", "#note-submit", function(event) {
   event.preventDefault();
   let noteContent = $("#textarea").val().trim()
-  console.log($(this).parent().attr("data-id"));
+  let thisId = $(this).parent().parent().attr("data-id");
+  console.log(noteContent);
   $.ajax({
     method: "POST",
-    url: "/articles/notes/",
-    dataType: "JSON"
+    url: "/articles/notes/" + thisId,
+    dataType: "JSON",
+    data: {content : noteContent}
   })
 })
 
