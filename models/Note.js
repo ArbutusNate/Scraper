@@ -12,6 +12,11 @@ var NoteSchema = new Schema({
   content: {
     type: String,
     required: true
+  },
+  deleted: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 });
 

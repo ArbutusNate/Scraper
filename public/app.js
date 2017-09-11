@@ -39,12 +39,12 @@ $(document).on("click", ".save-article", function() {
   });
 })
 
-
 //Open Note Modal
 $(document).on("click", "#add-note", function() {
   console.log("opening note modal and searching for notes")
   let thisId = $(this).parent().attr("data-id");
   $("#notes-list").empty();
+  $("#textarea").empty();
   $("#notes-modal").show().attr("data-id", thisId);
   $.getJSON("/articles/notes/" + thisId, (data) => {
     if(data) {
@@ -52,8 +52,10 @@ $(document).on("click", "#add-note", function() {
       console.log(data.Note);
       let oneNote = data.Note;
       let noteParser = oneNote.map((notes) => {
-        let singleNote = $("<div><span>" + notes.content + "</span><button>X</button</div>")
-        $("#notes-list").append(singleNote)
+        if(notes.deleted === false){
+          let singleNote = $("<div><span>" + notes.content + "</span><button class='delete-note' data-note-aid='" + notes.articleId + "' data-note-id='" + notes._id + "'>X</button</div>");
+          $("#notes-list").append(singleNote);
+        }
       })
     } else {
       return
@@ -65,6 +67,17 @@ $(document).on("click", "#add-note", function() {
 $(document).on("click", "#close", (event) => {
   event.preventDefault();
   $("#notes-modal").hide();
+})
+
+// Delete Note
+$(document).on("click", ".delete-note", function(event) {
+  event.preventDefault();
+  // let articleId = $(this).attr("data-note-aid");
+  let noteId = $(this).attr("data-note-id");
+  $.ajax({
+      method: "DELETE",
+      url: "/notes/delete/" + noteId
+    })
 })
 
 //Save Note
@@ -93,6 +106,18 @@ let displayArticles = (data) => {
     $("#" + data._id + "").append(articleTitle);
   })
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

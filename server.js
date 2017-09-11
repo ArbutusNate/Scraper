@@ -48,7 +48,7 @@ let displayThis = (res, err, doc) => {
 // ======
 
 //Scrape for articles
-app.get("/scrape", function(req, res) {
+app.get("/scrape", (req, res) => {
   console.log("trying to scrape");
   // First, we grab the body of the html with request
   request("https://www.nytimes.com/science", function(error, response, html) {
@@ -69,15 +69,13 @@ app.get("/scrape", function(req, res) {
           console.log(doc);
         }
       });
-
     });
   });
-  // res.send("Scraped");
   res.redirect("/");
 });
 
 // This will get the articles we scraped from the mongoDB
-app.get("/articles", function(req, res) {
+app.get("/articles", (req, res) => {
   console.log("Displaying scraped articles");
   Article.find({}, (err, doc) => {
     displayThis(res, err, doc);
@@ -94,7 +92,7 @@ app.get("/saved",(req, res) => {
 });
 
 // Set Saved to True
-app.post("/articles/:id", function(req, res) {
+app.post("/articles/:id", (req, res) => {
   console.log("Saving this article.");
   Article.update({ _id : req.params.id }, { $set: { saved: 'true' }}, (err, doc) => {
     displayThis(res, err, doc);
@@ -102,7 +100,7 @@ app.post("/articles/:id", function(req, res) {
 });
 
 // Get notes for this article
-app.get("/articles/notes/:id", function(req, res) {
+app.get("/articles/notes/:id", (req, res) => {
   console.log("running notes search and populate.")
   Article
     .findOne({ _id : req.params.id })
@@ -118,7 +116,7 @@ app.get("/articles/notes/:id", function(req, res) {
 });
 
 // Post Note
-app.post("/articles/notes/:id", function(req, res) {
+app.post("/articles/notes/:id", (req, res) => {
   console.log("postin a note: ");
   let newNote = new Note(req.body);
   console.log(newNote);
@@ -131,6 +129,18 @@ app.post("/articles/notes/:id", function(req, res) {
           throw err
         }
       })
+    }
+  })
+});
+
+// Delete Note
+app.delete("/notes/delete/:id", (req, res) => {
+  console.log("Deleting note...");
+  Note.remove({ _id : req.params.id }, (err, doc) => {
+    // displayThis(res, err, doc);
+    if(!err) {
+      console.log("removed");
+      // console.log(doc);
     }
   })
 });
