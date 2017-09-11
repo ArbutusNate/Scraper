@@ -44,12 +44,17 @@ $(document).on("click", ".save-article", function() {
 $(document).on("click", "#add-note", function() {
   console.log("opening note modal and searching for notes")
   let thisId = $(this).parent().attr("data-id");
+  $("#notes-list").empty();
   $("#notes-modal").show().attr("data-id", thisId);
   $.getJSON("/articles/notes/" + thisId, (data) => {
-    console.log("Note Info:")
-    console.log(data.note);
-    let singleNote = $("<div><span>" + data.note + "</span><button>X</button</div>")
-    $("#notes-list").append(singleNote)
+    if(!data) {
+      console.log("Note Info:")
+      console.log(data);
+      let singleNote = $("<div><span>" + data.note + "</span><button>X</button</div>")
+      $("#notes-list").append(singleNote)
+    } else {
+      return
+    }
   });
 })
 

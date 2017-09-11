@@ -1,23 +1,21 @@
 // Dependencies
-const express = require("express");
-const bodyParser = require("body-parser");
-// var logger = require("morgan");
-const mongoose = require("mongoose");
+  const express = require("express");
+  const bodyParser = require("body-parser");
+  // var logger = require("morgan");
+  const mongoose = require("mongoose");
 
-const request = require("request");
-const cheerio = require("cheerio");
+  const request = require("request");
+  const cheerio = require("cheerio");
 
-const Note = require("./models/Note.js");
-const Article = require("./models/Article.js");
+  const Note = require("./models/Note.js");
+  const Article = require("./models/Article.js");
+  // Initialize Express
+  const app = express();
+
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
-
-// Initialize Express
-const app = express();
-
-// Use morgan and body parser with our app
-// app.use(logger("dev"));
+//Use body-parser
 app.use(bodyParser.urlencoded({
   extended: false
 }));
@@ -49,6 +47,7 @@ let displayThis = (res, err, doc) => {
 // Routes
 // ======
 
+//Scrape for articles
 app.get("/scrape", function(req, res) {
   console.log("trying to scrape");
   // First, we grab the body of the html with request
@@ -105,15 +104,16 @@ app.post("/articles/:id", function(req, res) {
 // Get notes for this article
 app.get("/articles/notes/:id", function(req, res) {
   console.log("running notes search and populate.")
-  Article.findOne({ _id : req.params.id })
+  Article
+    .findOne({ _id : req.params.id })
     .populate('Note')
-    .exec(function(err, data) {
-      // displayThis(res, err, data);
-      if (!err) {
-        console.log(data);
-      } else {
-        throw err
-      }
+    .exec(function(err, article) {
+      displayThis(res, err, article);
+      // if (!err) {
+      //   console.log(article);
+      // } else {
+      //   throw err
+      // }
     })
 });
 
@@ -121,17 +121,22 @@ app.get("/articles/notes/:id", function(req, res) {
 app.post("/articles/notes/:id", function(req, res) {
   console.log("postin a note: ");
   let newNote = new Note(req.body);
-  Article.update({ _id : req.params.id }, { $set: {note : newNote} }, (err, doc) => {
-    if(!err){
-      console.log(doc);
-    } else {
-      throw err
+  console.log(newNote);
+  newNote.save((err, doc) => {
+    if(!err) {
+      Article.findOneAndupdate({ _id : req.params.id }, { $push: {"Note" : newNote} }, (err, doc) => {
+        if(!err){
+          console.log(doc);
+        } else {
+          throw err
+        }
+      })
     }
   })
 });
 
 
 // Listen on port 3000
-app.listen(3000, function() {
-  console.log("App running on port 3000!");
-});
+  app.listen(3000, function() {
+    console.log("App running on port 3000!");
+  });
