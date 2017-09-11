@@ -8,7 +8,7 @@ $.getJSON("/articles", function(data) {
 // })
 
 //brand button
-$(document).on("click", "#brand", function() {
+$(document).on("click", "#brand", () => {
   $.ajax({
     method: "GET",
     url: "/"
@@ -45,14 +45,32 @@ $(document).on("click", "#add-note", function() {
   console.log("opening note modal and searching for notes")
   let thisId = $(this).parent().attr("data-id");
   $("#notes-modal").show().attr("data-id", thisId);
-  $.getJSON("/articles/notes/" + thisId, function(data) {
+  $.getJSON("/articles/notes/" + thisId, (data) => {
     console.log(data);
   });
 })
 
+// Close Note Modal
+$(document).on("click", "#close", (event) => {
+  event.preventDefault();
+  $("#notes-modal").hide();
+})
+
+//Save Note
+$(document).on("click", "#note-submit", function(event) {
+  event.preventDefault();
+  let noteContent = $("#textarea").val().trim()
+  console.log($(this).parent().attr("data-id"));
+  $.ajax({
+    method: "POST",
+    url: "/articles/notes/",
+    dataType: "JSON"
+  })
+})
+
 let displayArticles = (data) => {
   $('#articles').empty();
-  let singleArticle = data.map(function(data) {
+  let singleArticle = data.map((data) => {
     // Display the apropos information on the page
     let articleBox =  $("<div class='article-box' id='" + data._id + "' data-id='" + data._id + "'> <button data-id='" + data._id + "' class='save-article'>Save</button><button id='add-note'>Note</button></div>");
     let articleTitle = $("<a href='" + data.link + "'><h2 class='title'>" + data.title + "</h2><button class='save'");

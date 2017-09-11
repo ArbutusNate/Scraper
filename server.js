@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const request = require("request");
 const cheerio = require("cheerio");
 
-const Models = require("./models/Comment.js");
+const Note = require("./models/Note.js");
 const Article = require("./models/Article.js");
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
@@ -40,8 +40,11 @@ db.once("open", function() {
 });
 
 let displayThis = (res, err, doc) => {
-  if (err) return handleError(err);
-  res.json(doc);
+  if (!err){
+    res.json(doc);
+  } else {
+    throw err;
+  }
 }
 // Routes
 // ======
@@ -83,13 +86,13 @@ app.get("/articles", function(req, res) {
 });
 
 //Shows saved articles.
-app.get("/saved",function(req, res) {
+app.get("/saved",(req, res) => {
   console.log("Getting saved articles.")
   Article.find({saved : 'true'}, (err, doc) => {
     console.log(doc);
     displayThis(res, err, doc);
   })
-})
+});
 
 // Set Saved to True
 app.post("/articles/:id", function(req, res) {
@@ -102,32 +105,23 @@ app.post("/articles/:id", function(req, res) {
 // Get notes for this article
 app.get("/articles/notes/:id", function(req, res) {
   console.log("running notes search and populate.")
-  Article.find({ _id : req.params.id })
-    .populate('Comment')
+  Article.findOne({ _id : req.params.id })
+    .populate('Note')
     .exec(function(err, article) {
-      if (err) return handleError(err);
-      console.log(article);
+      if (!err) {
+        console.log(article);
+      } else {
+        throw err;
+      }
     })
-})
-
-  // TODO
-  // ====
-
-  // save the new note that gets posted to the Notes collection
-
-  // then find an article from the req.params.id
-
-  // and update it's "note" property with the _id of the new note
-
-
-// });
+});
 
 // Post Note
 app.post("/articles/notes/:id", function(req, res) {
+  console.log("postin a note: " + req.body)
 
 
-
-})
+});
 
 
 // Listen on port 3000

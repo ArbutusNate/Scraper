@@ -16,11 +16,12 @@
 
       <div id="notes-modal">
         <form>
+          <button id="close">X</button>
           <h3>Notes</h3>
           <div id="notes-list"></div>
           <h3>Leave a Note!</h3>
           <textarea id="textarea" rows="10" cols="40" placeholder="Leave a note!"></textarea>
-          <input type="submit" method="PUT" action="/articles/notes" name="note-submit">
+          <input type="submit" id="note-submit" name="note-submit">
         </form>
       </div>
 
