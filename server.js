@@ -83,12 +83,12 @@ app.get("/articles", function(req, res) {
   })
 });
 
-// This will grab an article by it's ObjectId
+// Set Saved to True
 app.get("/articles/:id", function(req, res) {
   console.log("trying to make it go");
-  Article.find({_id : req.paramds.id}, (err, doc) => {
+  Article.update({ _id: req.params.id }, { $set: { saved: 'true' }}, (err, doc) => {
     if(!err){
-      console.log(doc.Notes);
+      console.log(doc);
     }
   })
 

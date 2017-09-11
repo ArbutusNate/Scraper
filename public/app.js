@@ -1,16 +1,46 @@
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
-  // For each one
+  sendArticles(data);
+  }
+);
+
+
+//Save Button
+$(document).on("click", ".save-article", function() {
+  // var thisId = $(this)
+  // console.log($(this).attr("data-id"));
+  let thisId = $(this).attr("data-id");
+  // .attr("data-id");
+  $.ajax({
+    method: "GET",
+    url: "/articles/" + thisId
+  });
+})
+
+$(document).on("click", ".saved-articles", function() {
+  $("articles").empty()
+})
+
+let sendArticles = (data) => {
   $('#articles').empty();
-  for (var i = 0; i < data.length; i++) {
+  let singleArticle = data.map(function(data) {
     // Display the apropos information on the page
-    let articleBox =  $("<div id='" + data[i]._id + "' data-id='" + data[i]._id + "'> <button class='save-article'>Save</button></div>");
-    let articleTitle = $("<a href='" + data[i].link + "'><h2 class='title'>" + data[i].title + "</h2>");
+    let articleBox =  $("<div class='article-box' id='" + data._id + "' data-id='" + data._id + "'> <button data-id='" + data._id + "' class='save-article'>Save</button></div>");
+    let articleTitle = $("<a href='" + data.link + "'><h2 class='title'>" + data.title + "</h2><button class='save'");
     // let notebutton = $()
     $("#articles").append(articleBox);
-    $("#" + data[i]._id + "").append(articleTitle);
-  }
-});
+    $("#" + data._id + "").append(articleTitle);
+  })
+}
+
+
+
+
+
+
+
+
+
 
 
 // Whenever someone clicks a p tag
