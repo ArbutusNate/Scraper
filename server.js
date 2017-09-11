@@ -106,7 +106,7 @@ app.get("/articles/notes/:id", function(req, res) {
   console.log("running notes search and populate.")
   Article
     .findOne({ _id : req.params.id })
-    .populate('Note')
+    .populate("Note")
     .exec(function(err, article) {
       displayThis(res, err, article);
       // if (!err) {
@@ -124,9 +124,9 @@ app.post("/articles/notes/:id", function(req, res) {
   console.log(newNote);
   newNote.save((err, doc) => {
     if(!err) {
-      Article.findOneAndupdate({ _id : req.params.id }, { $push: {"Note" : newNote} }, (err, doc) => {
+      Article.findOneAndUpdate({ _id : req.params.id }, { $push: {"Note" : doc._id} }, (err, doc) => {
         if(!err){
-          console.log(doc);
+          console.log(doc.Note);
         } else {
           throw err
         }

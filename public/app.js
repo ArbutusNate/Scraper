@@ -47,11 +47,14 @@ $(document).on("click", "#add-note", function() {
   $("#notes-list").empty();
   $("#notes-modal").show().attr("data-id", thisId);
   $.getJSON("/articles/notes/" + thisId, (data) => {
-    if(!data) {
-      console.log("Note Info:")
-      console.log(data);
-      let singleNote = $("<div><span>" + data.note + "</span><button>X</button</div>")
-      $("#notes-list").append(singleNote)
+    if(data) {
+      // console.log("Note Info:")
+      console.log(data.Note);
+      let oneNote = data.Note;
+      let noteParser = oneNote.map((notes) => {
+        let singleNote = $("<div><span>" + notes.content + "</span><button>X</button</div>")
+        $("#notes-list").append(singleNote)
+      })
     } else {
       return
     }
@@ -74,7 +77,8 @@ $(document).on("click", "#note-submit", function(event) {
     method: "POST",
     url: "/articles/notes/" + thisId,
     dataType: "JSON",
-    data: {content : noteContent}
+    data: {articleId : thisId,
+        content : noteContent}
   })
 })
 

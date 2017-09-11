@@ -1,3 +1,7 @@
+body {
+  background-color: teal;
+}
+
 .article-box {
   border: 2px solid black;
 }
@@ -6,4 +10,8 @@
   display: none;
   position: fixed;
   margin-left: 200px;
+  background-color: grey;
+}
+#close {
+  float: left;
 }
