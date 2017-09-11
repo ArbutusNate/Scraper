@@ -15,6 +15,18 @@ $(document).on("click", "#brand", function() {
   })
 })
 
+//Shows saved articles.
+$(document).on("click", ".saved-articles", function() {
+  $("#articles").empty();
+  $.ajax({
+    method: "GET",
+    url: "/saved"
+  }).then($.getJSON("/saved", (data) => {
+    displayArticles(data);
+  })
+  )
+})
+
 //Save Button
 $(document).on("click", ".save-article", function() {
   // var thisId = $(this)
@@ -27,18 +39,16 @@ $(document).on("click", ".save-article", function() {
   });
 })
 
-$(document).on("click", ".saved-articles", function() {
-  $("#articles").empty();
+
+//Open Note Modal
+$(document).on("click", "#add-note", function() {
+  let thisId = $(this).parent().attr("data-id");
+  $("#notes-modal").show().attr("data-id", thisId);
   $.ajax({
     method: "GET",
-    url: "/saved"
-  }).then($.getJSON("/saved", (data) => {
-    displayArticles(data);
+    url: "/articles/notes/" + thisId
   })
-  )
 })
-
-$(document).on("click", "", () => {})
 
 let displayArticles = (data) => {
   $('#articles').empty();

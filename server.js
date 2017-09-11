@@ -102,8 +102,8 @@ app.post("/articles/:id", function(req, res) {
   })
 });
 
-// Create a new note or replace an existing note
-app.post("/articles/:id", function(req, res) {
+// Get notes for this article 
+app.get("/articles/notes/:id", function(req, res) {
 
 
   // TODO
@@ -117,6 +117,13 @@ app.post("/articles/:id", function(req, res) {
 
 
 });
+
+// Post Note
+app.post("/articles/notes/:id", function(req, res) {
+
+
+  
+})
 
 
 // Listen on port 3000
