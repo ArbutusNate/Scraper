@@ -16,7 +16,7 @@ $(document).on("click", "#brand", () => {
 })
 
 //Shows saved articles.
-$(document).on("click", ".saved-articles", function() {
+$(document).on("click", ".saved-articles", () => {
   $("#articles").empty();
   $.ajax({
     method: "GET",

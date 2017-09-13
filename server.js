@@ -109,13 +109,8 @@ app.get("/articles/notes/:id", (req, res) => {
   Article
     .findOne({ _id : req.params.id })
     .populate("Note")
-    .exec(function(err, article) {
+    .exec((err, article) => {
       displayThis(res, err, article);
-      // if (!err) {
-      //   console.log(article);
-      // } else {
-      //   throw err
-      // }
     })
 });
 
@@ -141,16 +136,14 @@ app.post("/articles/notes/:id", (req, res) => {
 app.delete("/notes/delete/:id", (req, res) => {
   console.log("Deleting note...");
   Note.remove({ _id : req.params.id }, (err, doc) => {
-    // displayThis(res, err, doc);
     if(!err) {
       console.log("removed");
-      // console.log(doc);
     }
   })
 });
 
 
 // Listen on port 3000
-  app.listen(process.env.PORT || 3000, function() {
+  app.listen(process.env.PORT || 3000, () => {
     console.log("App running on port 3000!");
   });
